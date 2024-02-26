@@ -15,6 +15,7 @@
     "@mui/material-nextjs": "^5.15.11",
     "next": "latest",
     "react": "^18.2.0",
+    "react-canvas-confetti": "^2.0.5",
     "react-dom": "^18.2.0",
     "server-only": "^0.0.1"
   },

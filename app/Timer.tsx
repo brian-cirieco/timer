@@ -11,6 +11,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
+import Fireworks from 'react-canvas-confetti/dist/presets/fireworks';
 
 ///
 /// Constants
@@ -34,6 +35,7 @@ export default function Timer(): ReactElement {
   const millisecondsRef = useRef<number>(0);
   const [intervalID, setIntervalID] = useState<ReturnType<typeof setInterval>>();
   const [hasStarted, setHasStarted] = useState<boolean>(false);
+  const [toggleFireworks, setToggleFireworks] = useState<boolean>(false);
 
   const addSeconds = (val: number) => {
     let newSeconds = seconds + val;
@@ -90,6 +92,8 @@ export default function Timer(): ReactElement {
       setSeconds(0);
       clearInterval(intervalID);
       setIntervalID(undefined);
+      setToggleFireworks(true);
+      setTimeout(() => setToggleFireworks(false), 3000);
     }
     else if (hasStarted && !intervalID) {
       setIntervalID(setInterval(() => {
@@ -101,7 +105,9 @@ export default function Timer(): ReactElement {
     }
   }, [hasStarted, seconds, intervalID]);
 
-  return (
+  return (<>
+  {/* <Realistic autorun={{ speed: 2 }} /> */}
+    {toggleFireworks && <Fireworks autorun={{ speed: 1, duration: 3000 }} />}
     <Card sx={{ margin: 'auto', display: 'flex'}}>
       <Box margin="auto" display="flex" alignItems="center" flexDirection="column" fontSize="large">
         <CardContent sx={{ padding: '1em' }}>
@@ -124,5 +130,5 @@ export default function Timer(): ReactElement {
         </CardContent>
       </Box>
     </Card>
-  )
+  </>);
 }

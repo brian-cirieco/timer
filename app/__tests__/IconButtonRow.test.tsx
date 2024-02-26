@@ -26,7 +26,7 @@ describe('<ButtonRow />', function() {
     });
 
     // and: callbacks are called only when enabled buttons are clicked
-    // clicking disabled buttons causes an error to be thrown, so we avoid clicking them here
+    // clicking disabled buttons causes an error to be thrown in testing, so we avoid clicking them here
     // for reference: https://github.com/testing-library/user-event/issues/662
     buttons.forEach((button, idx) => !buttonConfigs[idx].disabled && userEvent.click(button));
     await waitFor(() => expect(callbackMock).toHaveBeenCalledTimes(2));

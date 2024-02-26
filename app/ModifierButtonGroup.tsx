@@ -1,7 +1,8 @@
 import { ReactElement } from "react";
 import { Add, Remove } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';''
 
 type PropsT = {
   title: string;
@@ -33,7 +34,7 @@ export default function ModifierButtonGroup({
     >
       <Remove />
     </IconButton>
-    <h2>{title}</h2>
+    <Typography component="h2">{title}</Typography>
     <IconButton
       aria-label={`add ${title}`}
       aria-disabled={disableAddition}
