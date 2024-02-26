@@ -27,6 +27,7 @@ export default function ModifierButtonGroup({
   >
     <IconButton
       aria-label={`subtract ${title}`}
+      aria-disabled={disableSubtraction}
       disabled={disableSubtraction}
       onClick={() => setValue(-value)}
     >
@@ -35,6 +36,7 @@ export default function ModifierButtonGroup({
     <h2>{title}</h2>
     <IconButton
       aria-label={`add ${title}`}
+      aria-disabled={disableAddition}
       disabled={disableAddition}
       onClick={() => setValue(value)}
     >

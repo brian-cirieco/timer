@@ -25,7 +25,7 @@ function TimeDisplay({ totalSeconds }: PropsT): ReactElement<PropsT> {
   const minutes = Math.floor(totalSeconds / 60).toString();
   const seconds = totalSeconds % 60 === 0 ? '00' : Math.floor(totalSeconds % 60).toString();
 
-  return <Typography variant="h1" align="center">
+  return <Typography variant="h1" align="center" role="timer">
     {formatDisplayDigits(minutes)} : {formatDisplayDigits(seconds)}
   </Typography>
 }

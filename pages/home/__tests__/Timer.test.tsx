@@ -34,10 +34,10 @@ function expectActiveState() {
 
   // only stop and reset buttons are enabled
   expect(screen.getAllByRole('button')
-    .every(button =>
-      button.getAttribute('aria-label') === 'Stop' || button.getAttribute('aria-label') === 'Reset'
+    .every(button =>{console.log(button.getAttribute('aria-label'), button.getAttribute('aria-disabled'))
+      return button.getAttribute('aria-label') === 'Stop' || button.getAttribute('aria-label') === 'Reset'
         ? button.getAttribute('aria-disabled') === 'false'
-        : button.getAttribute('aria-disabled') === 'true')
+        : button.getAttribute('aria-disabled') === 'true'})
   ).toBeTruthy();
 }
 
@@ -97,7 +97,7 @@ describe('<Timer />', function() {
 
     test('clicking stop button will set the timer in its paused state', async function() {
       // when: user clicks stop
-      await userEvent.click(screen.getByRole('button', { name: 'Stop' }));
+      await userEvent.click(screen.getByLabelText('Stop'));
 
       // then: timer is paused
       expectPausedState();
@@ -105,7 +105,7 @@ describe('<Timer />', function() {
 
     test('clicking the reset button will set the timer in its default state', async function() {
       // when: user clicks reset
-      await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+      await userEvent.click(screen.getByLabelText('Reset'));
 
       // then: timer is reset to default state
       expectDefaultState();
@@ -125,8 +125,8 @@ describe('<Timer />', function() {
 
     beforeEach(async function() {
       await userEvent.click(screen.getByLabelText('add 10 seconds'));
-      await userEvent.click(screen.getByRole('button', { name: 'Start' }));
-      await userEvent.click(screen.getByRole('button', { name: 'Stop' }));
+      await userEvent.click(screen.getByLabelText('Start'));
+      await userEvent.click(screen.getByLabelText('Stop'));
       expectPausedState();
     });
 
@@ -143,7 +143,7 @@ describe('<Timer />', function() {
 
     test('timer is active after hitting play again', async function() {
       // when: user clicks play button
-      await userEvent.click(screen.getByRole('button', { name: 'Start' }));
+      await userEvent.click(screen.getByLabelText('Start'));
 
       // then: timer is active again
       expectActiveState();
@@ -151,7 +151,7 @@ describe('<Timer />', function() {
 
     test('timer is reset after clicking reset button', async function() {
       // when: user clicks reset button
-      await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+      await userEvent.click(screen.getByLabelText('Reset'));
 
       // then: timer is at default state
       expectDefaultState();

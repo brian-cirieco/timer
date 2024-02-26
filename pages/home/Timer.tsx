@@ -60,7 +60,7 @@ export default function Timer(): ReactElement {
         }
       },
       {
-        ariaLabel: 'Pause',
+        ariaLabel: 'Stop',
         icon: <PauseIcon fontSize="inherit" />,
         disabled: !hasStarted,
         variant: 'warning',
