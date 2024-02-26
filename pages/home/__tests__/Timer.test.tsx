@@ -47,11 +47,9 @@ function expectPausedState() {
 
   // only stop button is disabled
   expect(screen.getAllByRole('button')
-    .every(button => {
-      console.log(button.getAttribute('aria-label'), button.getAttribute('aria-disabled'))
-      return button.getAttribute('aria-label') === 'Stop'
+    .every(button => button.getAttribute('aria-label') === 'Stop'
       ? button.getAttribute('aria-disabled') === 'true'
-      : button.getAttribute('aria-disabled') === 'false'})
+      : button.getAttribute('aria-disabled') === 'false')
   ).toBeTruthy();
 }
 
@@ -61,7 +59,7 @@ describe('<Timer />', function() {
     render(<Timer />);
   });
 
-  describe.skip('when timer is at default state', function() {
+  describe('when timer is at default state', function() {
     test('adding time enables all subtraction, start, and reset buttons', async function() {
       // when: user adds 1 minute to timer
       await userEvent.click(screen.getByLabelText('add 1 minute'));
@@ -71,7 +69,7 @@ describe('<Timer />', function() {
   
       // and: all buttons except stop button are enabled
       expect(screen.getAllByRole('button')
-        .every(button => button.ariaLabel === 'Stop'
+        .every(button => button.getAttribute('aria-label') === 'Stop'
           ? button.hasAttribute('disabled')
           : !button.hasAttribute('disabled'))
       );
@@ -102,7 +100,7 @@ describe('<Timer />', function() {
       await userEvent.click(screen.getByRole('button', { name: 'Stop' }));
 
       // then: timer is paused
-      await waitFor(() => expectPausedState());
+      expectPausedState();
     });
 
     test('clicking the reset button will set the timer in its default state', async function() {
@@ -116,24 +114,25 @@ describe('<Timer />', function() {
     test('timer resets to default state when time elapses to zero', async function() {
 
       // when: timer elapses to zero
-      await waitFor(() => expect(screen.getByRole('timer').innerHTML).toEqual('00 : 00'), { timeout: 1200 });
+      await waitFor(() => expect(screen.getByRole('timer').innerHTML).toEqual('00 : 00'));
 
       // then: timer is at default state
-      await waitFor(() => expectDefaultState());
+      expectDefaultState();
     });
   });
 
-  describe.skip('when timer paused', function() {
+  describe('when timer is paused', function() {
 
     beforeEach(async function() {
-      await userEvent.click(screen.getByLabelText(''));
+      await userEvent.click(screen.getByLabelText('add 10 seconds'));
+      await userEvent.click(screen.getByRole('button', { name: 'Start' }));
       await userEvent.click(screen.getByRole('button', { name: 'Stop' }));
       expectPausedState();
     });
 
     test('user can add more time', async function() {
       // when: user adds 10s to timer when paused at 00 : 10
-      await userEvent.click(screen.getByRole('button', { name: '+ 10s' }));
+      await userEvent.click(screen.getByLabelText('add 10 seconds'));
 
       // then: time was successfully added
       expect(screen.getByRole('timer').innerHTML).toEqual('00 : 20');

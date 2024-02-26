@@ -72,7 +72,6 @@ export default function Timer(): ReactElement {
         handleClick: () => {
           setHasStarted(false);
           clearInterval(intervalID);
-          console.log('stop')
         }
       },
       {
@@ -84,7 +83,6 @@ export default function Timer(): ReactElement {
   ];
 
   useEffect(() => {
-    console.log(hasStarted)
     if (!hasStarted) {
       clearInterval(intervalID);
       setIntervalID(undefined);
