@@ -9,9 +9,9 @@ describe('<ButtonRow />', function() {
     // when: button configurations are passed to ButtonRow
     const callbackMock = jest.fn();
     const buttonConfigs: Array<ButtonProps> = [
-      { title: 'button 1', disabled: true, onClick: callbackMock },
-      { title: 'button 2', disabled: false, onClick: callbackMock },
-      { title: 'button 3', disabled: false, onClick: callbackMock }
+      { title: 'button 1', disabled: true, handleClick: callbackMock },
+      { title: 'button 2', disabled: false, handleClick: callbackMock },
+      { title: 'button 3', disabled: false, handleClick: callbackMock }
     ];
     
     render(<ButtonRow buttonConfigs={buttonConfigs}/>);

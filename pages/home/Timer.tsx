@@ -1,5 +1,7 @@
 'use client'
+import AddIcon from '@mui/icons-material/Add';
 import { ReactElement, useEffect, useRef, useState } from 'react';
+import RemoveIcon from '@mui/icons-material/Remove';
 import TimeDisplay from './TimeDisplay';
 import ButtonRow, { ButtonProps } from './ButtonRow';
 
@@ -7,10 +9,11 @@ import ButtonRow, { ButtonProps } from './ButtonRow';
 /// Constants
 ///
 
-const buttonValuesInSeconds = [
-  { title: '1s', value: 1 },
-  { title: '10s', value: 10 },
-  { title: '1min', value: 60 }
+// exported for testing
+export const modifierButtonProps = [
+  { title: '1s', value: 1, ariaLabel: '1 second' },
+  { title: '10s', value: 10, ariaLabel: '10 seconds' },
+  { title: '1min', value: 60, ariaLabel: '1 minute' }
 ];
 const maximumTime = 99 * 60 + 59;
 
@@ -38,23 +41,27 @@ export default function Timer(): ReactElement {
 
   const buttonRowConfigs: ButtonProps[][] = [
     // add buttons
-    buttonValuesInSeconds.map(({ title, value }) => ({
-      title: '+ ' + title,
+    modifierButtonProps.map(({ title, value, ariaLabel }) => ({
+      title,
+      ariaLabel: 'add ' + ariaLabel,
+      startIcon: <AddIcon />,
       disabled: hasStarted || seconds === maximumTime,
-      onClick: () => addSeconds(value),
+      handleClick: () => addSeconds(value),
     })),
     // subtract buttons
-    buttonValuesInSeconds.map(({ title, value }) => ({
-      title: '- ' + title,
+    modifierButtonProps.map(({ title, value, ariaLabel }) => ({
+      title,
+      ariaLabel: 'subtract ' + ariaLabel,
+      startIcon: <RemoveIcon />,
       disabled: hasStarted || seconds === 0,
-      onClick: () => addSeconds(-value)
+      handleClick: () => addSeconds(-value)
     })),
     // control buttons
     [
       {
         title: 'Start',
         disabled: hasStarted || seconds === 0,
-        onClick: () => {
+        handleClick: () => {
           setHasStarted(true);
           millisecondsRef.current = seconds * 1000;
         }
@@ -62,17 +69,26 @@ export default function Timer(): ReactElement {
       {
         title: 'Stop',
         disabled: !hasStarted,
-        onClick: () => setHasStarted(false)
+        handleClick: () => {
+          setHasStarted(false);
+          clearInterval(intervalID);
+          console.log('stop')
+        }
       },
       {
         title: 'Reset',
         disabled: seconds === 0,
-        onClick: () => setSeconds(0)
+        handleClick: () => setSeconds(0)
       }
     ]
   ];
 
   useEffect(() => {
+    console.log(hasStarted)
+    if (!hasStarted) {
+      clearInterval(intervalID);
+      setIntervalID(undefined);
+    }
 
     if (hasStarted && seconds <= 0) {
       setHasStarted(false);
@@ -87,10 +103,6 @@ export default function Timer(): ReactElement {
           setSeconds(currentSeconds => currentSeconds - 1)
         }
       }, 100));
-    }
-    else if (!hasStarted) {
-      clearInterval(intervalID);
-      setIntervalID(undefined);
     }
 
   }, [hasStarted, seconds, intervalID]);
