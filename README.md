@@ -11,6 +11,7 @@ To run tests:
 `npm run test`
 
 To deploy local app
+`npm run build`
 `npm run start`
 
 Alternatively, the app is deployed on Vercel at https://vercel.com/brian-ciriecos-projects/timer
