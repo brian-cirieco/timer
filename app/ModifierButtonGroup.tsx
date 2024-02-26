@@ -34,7 +34,7 @@ export default function ModifierButtonGroup({
     >
       <Remove />
     </IconButton>
-    <Typography component="h2">{title}</Typography>
+    <Typography component="h2" fontSize="2em">{title}</Typography>
     <IconButton
       aria-label={`add ${title}`}
       aria-disabled={disableAddition}

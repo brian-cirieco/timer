@@ -12,18 +12,7 @@ import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Fireworks from 'react-canvas-confetti/dist/presets/fireworks';
-
-///
-/// Constants
-///
-
-// exported for testing
-export const modifierButtonProps = [
-  { title: '1 s', value: 1, ariaLabel: '1 second' },
-  { title: '10 s', value: 10, ariaLabel: '10 seconds' },
-  { title: '1 min', value: 60, ariaLabel: '1 minute' }
-];
-const maximumTime = 99 * 60 + 59;
+import { maximumTime, modifierButtonProps } from './constants';
 
 ///
 /// Main Component
@@ -32,11 +21,16 @@ const maximumTime = 99 * 60 + 59;
 export default function Timer(): ReactElement {
 
   const [seconds, setSeconds] = useState<number>(0);
+  // milliseconds tracked using a reference to prevent unnecessary re-renders every 100 milliseconds
   const millisecondsRef = useRef<number>(0);
   const [intervalID, setIntervalID] = useState<ReturnType<typeof setInterval>>();
   const [hasStarted, setHasStarted] = useState<boolean>(false);
   const [toggleFireworks, setToggleFireworks] = useState<boolean>(false);
 
+  /**
+   * Helper function that adds or subtracts seconds.
+   * Prevents number of seconds to go below 0 and above the maximum time allowed
+   */
   const addSeconds = (val: number) => {
     let newSeconds = seconds + val;
     if (newSeconds < 0) {
@@ -48,7 +42,10 @@ export default function Timer(): ReactElement {
     setSeconds(newSeconds)
   };
 
-  const buttonRowConfigs: IconButtonPropsT[][] = [
+  /**
+   * Sets props, icons, and callbacks for the Play, Stop, and Reset buttons.
+   */
+  const controllerButtonsProps: IconButtonPropsT[][] = [
     // control buttons
     [
       {
@@ -68,7 +65,6 @@ export default function Timer(): ReactElement {
         variant: 'warning',
         handleClick: () => {
           setHasStarted(false);
-          clearInterval(intervalID);
         }
       },
       {
@@ -76,18 +72,22 @@ export default function Timer(): ReactElement {
         icon: <StopIcon fontSize="inherit" />,
         disabled: seconds === 0,
         variant: 'primary',
-        handleClick: () => setSeconds(0)
+        handleClick: () => {
+          setSeconds(0);
+          setHasStarted(false);
+        }
       }
     ]
   ];
 
   useEffect(() => {
+    // clear interval when timer is inactive
     if (!hasStarted) {
       clearInterval(intervalID);
       setIntervalID(undefined);
     }
-
-    if (hasStarted && seconds <= 0) {
+    // when timer is still active and time runs out, trigger fireworks and reset timer
+    else if (hasStarted && seconds <= 0) {
       setHasStarted(false);
       setSeconds(0);
       clearInterval(intervalID);
@@ -95,9 +95,11 @@ export default function Timer(): ReactElement {
       setToggleFireworks(true);
       setTimeout(() => setToggleFireworks(false), 3000);
     }
+    // when time has begun but interval is still uninitialized, start interval
     else if (hasStarted && !intervalID) {
       setIntervalID(setInterval(() => {
         millisecondsRef.current -= 100;
+        // only change seconds every 1000 milliseconds to ensure re-renders only happen every second.
         if (millisecondsRef.current % 1000 === 0) {
           setSeconds(currentSeconds => currentSeconds - 1)
         }
@@ -106,29 +108,28 @@ export default function Timer(): ReactElement {
   }, [hasStarted, seconds, intervalID]);
 
   return (<>
-  {/* <Realistic autorun={{ speed: 2 }} /> */}
     {toggleFireworks && <Fireworks autorun={{ speed: 1, duration: 3000 }} />}
-    <Card sx={{ margin: 'auto', display: 'flex'}}>
+    <Card sx={{ margin: 'auto', display: 'flex', backgroundColor: 'lavender'}}>
       <Box margin="auto" display="flex" alignItems="center" flexDirection="column" fontSize="large">
         <CardContent sx={{ padding: '1em' }}>
-        <Stack divider={<Divider />}>
+        <Stack divider={<Divider />} display="flex" justifyContent="space-between">
           <TimeDisplay totalSeconds={seconds} />
-          {modifierButtonProps.map(({ title, value, ariaLabel }) =>
+          {controllerButtonsProps.map((buttonConfigs, idx) =>
+            <IconButtonRow key={new Date().getTime() + idx} buttonConfigs={buttonConfigs}/>
+          )}
+          {modifierButtonProps.map(({ title, value }) =>
             <ModifierButtonGroup
-              key={new Date().getTime() + ariaLabel}
-              title={ariaLabel}
+              key={new Date().getTime() + title}
+              title={title}
               value={value}
               setValue={addSeconds}
               disableAddition={hasStarted || seconds === maximumTime}
               disableSubtraction={hasStarted || seconds === 0}
             />
           )}
-          {buttonRowConfigs.map((buttonConfigs, idx) =>
-            <IconButtonRow key={new Date().getTime() + idx} buttonConfigs={buttonConfigs}/>
-          )}
           </Stack>
         </CardContent>
       </Box>
     </Card>
   </>);
-}
+};

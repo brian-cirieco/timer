@@ -12,13 +12,10 @@ export default function Page() {
     display="flex"
     flexDirection="column"
     textAlign="center"
-    justifyContent="space-around"
-    height="100%"
-    sx={{
-      backgroundColor: 'lavender'
-    }}
+    padding="5%"
+    height="80vh"
   >
-    <Typography variant="h2" align="center" role="timer">
+    <Typography variant="h1" align="center" role="heading" fontSize="80px">
       Timer
     </Typography>
     <Timer />
