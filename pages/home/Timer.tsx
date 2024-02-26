@@ -18,7 +18,7 @@ const maximumTime = 99 * 60 + 59;
 /// Main Component
 ///
 
-function Timer(): ReactElement {
+export default function Timer(): ReactElement {
 
   const [seconds, setSeconds] = useState<number>(0);
   const [intervalID, setIntervalID] = useState<ReturnType<typeof setInterval>>();
@@ -40,12 +40,12 @@ function Timer(): ReactElement {
     buttonValuesInSeconds.map(({ title, value }) => ({
       title: '+ ' + title,
       disabled: hasStarted || seconds === maximumTime,
-      onClick: () => addSeconds(value)
+      onClick: () => addSeconds(value),
     })),
     // subtract buttons
     buttonValuesInSeconds.map(({ title, value }) => ({
       title: '- ' + title,
-      disabled: hasStarted || seconds - value < 0,
+      disabled: hasStarted || seconds === 0,
       onClick: () => addSeconds(-value)
     })),
     // control buttons
@@ -87,11 +87,11 @@ function Timer(): ReactElement {
   }, [hasStarted, seconds, intervalID]);
 
   return (
-    <div>
+    <>
       <TimeDisplay totalSeconds={seconds} />
-      {buttonRowConfigs.map(buttonConfigs => <ButtonRow buttonConfigs={buttonConfigs}/>)}
-    </div>
+      {buttonRowConfigs.map((buttonConfigs, idx) =>
+        <ButtonRow key={new Date().getTime() + idx} buttonConfigs={buttonConfigs}/>
+      )}
+    </>
   )
 }
-
-export default Timer;
