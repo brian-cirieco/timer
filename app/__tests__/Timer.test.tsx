@@ -34,10 +34,9 @@ function expectActiveState() {
 
   // only stop and reset buttons are enabled
   expect(screen.getAllByRole('button')
-    .every(button =>{console.log(button.getAttribute('aria-label'), button.getAttribute('aria-disabled'))
-      return button.getAttribute('aria-label') === 'Stop' || button.getAttribute('aria-label') === 'Reset'
+    .every(button => button.getAttribute('aria-label') === 'Stop' || button.getAttribute('aria-label') === 'Reset'
         ? button.getAttribute('aria-disabled') === 'false'
-        : button.getAttribute('aria-disabled') === 'true'})
+        : button.getAttribute('aria-disabled') === 'true')
   ).toBeTruthy();
 }
 
