@@ -3,7 +3,7 @@ import { userEvent } from '@testing-library/user-event';
 import { render, screen, waitFor } from "@testing-library/react";
 import IconButtonRow, { IconButtonPropsT } from "../IconButtonRow";
 
-describe('<ButtonRow />', function() {
+describe('<IconButtonRow />', function() {
   it('displays 3 buttons with the correct titles, disabled, and callbacks', async function() {
     
     // when: button configurations are passed to ButtonRow

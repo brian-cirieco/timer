@@ -18,6 +18,13 @@ import { maximumTime, modifierButtonProps } from './constants';
 /// Main Component
 ///
 
+/**
+ * Represents a timer with a keypad for controlling the time and the timer's state. Makes confetti fireworks when countdown reaches zero without reset :)
+ * Timer states:
+ * - reset: Time is at 00 : 00 and all control and subtract buttons are disabled. Rendered in this state by default.
+ * - active: Time is non-zero and is counting down in 100ms increments, but re-renders every 1s. Only stop and reset buttons are enabled.
+ * - stopped: Time is non-zero and is not counting down. All add and subtract buttons are enabled. Play and reset buttons are enabled.
+ */
 export default function Timer(): ReactElement {
 
   const [seconds, setSeconds] = useState<number>(0);

@@ -12,6 +12,7 @@ function formatDisplayDigits(num: string): string {
 ///
 /// Types
 ///
+
 type PropsT = {
   totalSeconds: number;
 }
@@ -20,6 +21,10 @@ type PropsT = {
 /// Main Component
 ///
 
+/**
+ * Displays total number of seconds in mm : ss format.
+ * Converts seconds to minutes as needed.
+ */
 function TimeDisplay({ totalSeconds }: PropsT): ReactElement<PropsT> {
 
   const minutes = Math.floor(totalSeconds / 60).toString();
