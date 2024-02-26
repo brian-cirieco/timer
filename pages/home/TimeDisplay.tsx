@@ -1,4 +1,5 @@
 import { ReactElement } from "react";
+import Typography from '@mui/material/Typography';
 
 ///
 /// Utility Functions
@@ -24,9 +25,9 @@ function TimeDisplay({ totalSeconds }: PropsT): ReactElement<PropsT> {
   const minutes = Math.floor(totalSeconds / 60).toString();
   const seconds = totalSeconds % 60 === 0 ? '00' : Math.floor(totalSeconds % 60).toString();
 
-  return <div id="time-display" role="timer">
+  return <Typography variant="h1" align="center">
     {formatDisplayDigits(minutes)} : {formatDisplayDigits(seconds)}
-  </div>;
+  </Typography>
 }
 
 export default TimeDisplay;

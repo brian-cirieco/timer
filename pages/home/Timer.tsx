@@ -1,9 +1,16 @@
 'use client'
-import AddIcon from '@mui/icons-material/Add';
 import { ReactElement, useEffect, useRef, useState } from 'react';
-import RemoveIcon from '@mui/icons-material/Remove';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import StopIcon from '@mui/icons-material/Stop';
 import TimeDisplay from './TimeDisplay';
-import ButtonRow, { ButtonProps } from './ButtonRow';
+import IconButtonRow, { IconButtonPropsT } from './IconButtonRow';
+import ModifierButtonGroup from './ModifierButtonGroup';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 
 ///
 /// Constants
@@ -11,9 +18,9 @@ import ButtonRow, { ButtonProps } from './ButtonRow';
 
 // exported for testing
 export const modifierButtonProps = [
-  { title: '1s', value: 1, ariaLabel: '1 second' },
-  { title: '10s', value: 10, ariaLabel: '10 seconds' },
-  { title: '1min', value: 60, ariaLabel: '1 minute' }
+  { title: '1 s', value: 1, ariaLabel: '1 second' },
+  { title: '10 s', value: 10, ariaLabel: '10 seconds' },
+  { title: '1 min', value: 60, ariaLabel: '1 minute' }
 ];
 const maximumTime = 99 * 60 + 59;
 
@@ -39,44 +46,34 @@ export default function Timer(): ReactElement {
     setSeconds(newSeconds)
   };
 
-  const buttonRowConfigs: ButtonProps[][] = [
-    // add buttons
-    modifierButtonProps.map(({ title, value, ariaLabel }) => ({
-      title,
-      ariaLabel: 'add ' + ariaLabel,
-      startIcon: <AddIcon />,
-      disabled: hasStarted || seconds === maximumTime,
-      handleClick: () => addSeconds(value),
-    })),
-    // subtract buttons
-    modifierButtonProps.map(({ title, value, ariaLabel }) => ({
-      title,
-      ariaLabel: 'subtract ' + ariaLabel,
-      startIcon: <RemoveIcon />,
-      disabled: hasStarted || seconds === 0,
-      handleClick: () => addSeconds(-value)
-    })),
+  const buttonRowConfigs: IconButtonPropsT[][] = [
     // control buttons
     [
       {
-        title: 'Start',
+        ariaLabel: 'Start',
+        icon: <PlayArrowIcon fontSize="inherit" />,
         disabled: hasStarted || seconds === 0,
+        variant: 'success',
         handleClick: () => {
           setHasStarted(true);
           millisecondsRef.current = seconds * 1000;
         }
       },
       {
-        title: 'Stop',
+        ariaLabel: 'Pause',
+        icon: <PauseIcon fontSize="inherit" />,
         disabled: !hasStarted,
+        variant: 'warning',
         handleClick: () => {
           setHasStarted(false);
           clearInterval(intervalID);
         }
       },
       {
-        title: 'Reset',
+        ariaLabel: 'Reset',
+        icon: <StopIcon fontSize="inherit" />,
         disabled: seconds === 0,
+        variant: 'primary',
         handleClick: () => setSeconds(0)
       }
     ]
@@ -102,15 +99,30 @@ export default function Timer(): ReactElement {
         }
       }, 100));
     }
-
   }, [hasStarted, seconds, intervalID]);
 
   return (
-    <>
-      <TimeDisplay totalSeconds={seconds} />
-      {buttonRowConfigs.map((buttonConfigs, idx) =>
-        <ButtonRow key={new Date().getTime() + idx} buttonConfigs={buttonConfigs}/>
-      )}
-    </>
+    <Card sx={{ margin: 'auto', display: 'flex'}}>
+      <Box margin="auto" display="flex" alignItems="center" flexDirection="column" fontSize="large">
+        <CardContent sx={{ padding: '1em' }}>
+        <Stack divider={<Divider />}>
+          <TimeDisplay totalSeconds={seconds} />
+          {modifierButtonProps.map(({ title, value, ariaLabel }) =>
+            <ModifierButtonGroup
+              key={new Date().getTime() + ariaLabel}
+              title={ariaLabel}
+              value={value}
+              setValue={addSeconds}
+              disableAddition={hasStarted || seconds === maximumTime}
+              disableSubtraction={hasStarted || seconds === 0}
+            />
+          )}
+          {buttonRowConfigs.map((buttonConfigs, idx) =>
+            <IconButtonRow key={new Date().getTime() + idx} buttonConfigs={buttonConfigs}/>
+          )}
+          </Stack>
+        </CardContent>
+      </Box>
+    </Card>
   )
 }

@@ -1,20 +1,20 @@
 import '@testing-library/jest-dom';
 import { userEvent } from '@testing-library/user-event';
 import { render, screen } from "@testing-library/react";
-import ButtonRow, { ButtonProps } from "../ButtonRow";
+import IconButtonRow, { IconButtonPropsT } from "../IconButtonRow";
 
 describe('<ButtonRow />', function() {
   it('displays 3 buttons with the correct titles, disabled, and callbacks', async function() {
     
     // when: button configurations are passed to ButtonRow
     const callbackMock = jest.fn();
-    const buttonConfigs: Array<ButtonProps> = [
+    const buttonConfigs: Array<IconButtonPropsT> = [
       { title: 'button 1', disabled: true, handleClick: callbackMock },
       { title: 'button 2', disabled: false, handleClick: callbackMock },
       { title: 'button 3', disabled: false, handleClick: callbackMock }
     ];
     
-    render(<ButtonRow buttonConfigs={buttonConfigs}/>);
+    render(<IconButtonRow buttonConfigs={buttonConfigs}/>);
 
     // then: buttons are shown to user
     const buttons = screen.getAllByRole('button');
