@@ -13,7 +13,7 @@ To run tests:
 To deploy local app
 `npm run start`
 
-Alternatively, the app is deployed on GitHub Pages at https://brian-cirieco.github.io/timer/
+Alternatively, the app is deployed on Vercel at https://vercel.com/brian-ciriecos-projects/timer
 
 ## Tools Used
 
