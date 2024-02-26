@@ -1,5 +1,5 @@
 'use client'
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import TimeDisplay from './TimeDisplay';
 import ButtonRow, { ButtonProps } from './ButtonRow';
 
@@ -21,6 +21,7 @@ const maximumTime = 99 * 60 + 59;
 export default function Timer(): ReactElement {
 
   const [seconds, setSeconds] = useState<number>(0);
+  const millisecondsRef = useRef<number>(0);
   const [intervalID, setIntervalID] = useState<ReturnType<typeof setInterval>>();
   const [hasStarted, setHasStarted] = useState<boolean>(false);
 
@@ -53,7 +54,10 @@ export default function Timer(): ReactElement {
       {
         title: 'Start',
         disabled: hasStarted || seconds === 0,
-        onClick: () => setHasStarted(true)
+        onClick: () => {
+          setHasStarted(true);
+          millisecondsRef.current = seconds * 1000;
+        }
       },
       {
         title: 'Stop',
@@ -77,7 +81,12 @@ export default function Timer(): ReactElement {
       setIntervalID(undefined);
     }
     else if (hasStarted && !intervalID) {
-      setIntervalID(setInterval(() => setSeconds(currentSeconds => currentSeconds - 0.1), 100));
+      setIntervalID(setInterval(() => {
+        millisecondsRef.current -= 100;
+        if (millisecondsRef.current % 1000 === 0) {
+          setSeconds(currentSeconds => currentSeconds - 1)
+        }
+      }, 100));
     }
     else if (!hasStarted) {
       clearInterval(intervalID);
